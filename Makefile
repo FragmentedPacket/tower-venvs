@@ -36,7 +36,8 @@ install_py2_envs_%:
 			pip install -U pip; \
 			pip install -r py2/$*/requirements.txt; \
 		else \
-			$(VENV_BASE)/$*/bin/pip install -r py2/$*/requirements.txt; \
+			$(VENV_BASE)/$*/bin/pip install -U pip; \
+			$(VENV_BASE)/$*/bin/pip install -U -r py2/$*/requirements.txt; \
 		fi; \
 	fi
 
@@ -49,6 +50,7 @@ install_py3_envs_%:
 			umask 0022; \
 			pip install -r py3/$*/requirements.txt; \
 		else \
-			$(VENV_BASE)/$*/bin/pip install -r py3/$*/requirements.txt; \
+			$(VENV_BASE)/$*/bin/pip install -U pip; \
+			$(VENV_BASE)/$*/bin/pip install -U -r py3/$*/requirements.txt; \
 		fi; \
 	fi
