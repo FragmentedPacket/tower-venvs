@@ -3,9 +3,10 @@ PY2_VENVS := $(subst py2/,,$(wildcard py2/*))
 PY3_VENVS := $(subst py3/,,$(wildcard py3/*))
 USERNAME ?= admin
 PASSWORD ?= password
-SERVER ?= 192.168.200.113
+SERVER ?= 192.168.200.111
 
 create_venvs:
+	rm -rf ${VENV_BASE}; \
 	make install create_venv_base_dir; \
 	for venv in $(PY2_VENVS); do \
 		make install_py2_envs_$$venv; \
@@ -30,14 +31,14 @@ add_custom_venvs_to_tower:
 install_py2_envs_%:
 	if [ "$(VENV_BASE)" ]; then \
 		if [ ! -d "$(VENV_BASE)/$*" ]; then \
-			virtualenv $(VENV_BASE)/$*; \
-			source $(VENV_BASE)/$*/bin/activate; \
+			virtualenv $(VENV_BASE)/py2_$*; \
+			source $(VENV_BASE)/py2_$*/bin/activate; \
 			umask 0022; \
 			pip install -U pip; \
 			pip install -r py2/$*/requirements.txt; \
 		else \
-			$(VENV_BASE)/$*/bin/pip install -U pip; \
-			$(VENV_BASE)/$*/bin/pip install -U -r py2/$*/requirements.txt; \
+			$(VENV_BASE)/py2_$*/bin/pip install -U pip; \
+			$(VENV_BASE)/py2_$*/bin/pip install -U -r py2/$*/requirements.txt; \
 		fi; \
 	fi
 
@@ -45,12 +46,12 @@ install_py3_envs_%:
 	yum install -y python36-devel python-devel gcc; \
 	if [ "$(VENV_BASE)" ]; then \
 		if [ ! -d "$(VENV_BASE)/$*" ]; then \
-			python3 -m venv --system-site-packages $(VENV_BASE)/$*; \
-			source $(VENV_BASE)/$*/bin/activate; \
+			python3 -m venv --system-site-packages $(VENV_BASE)/py3_$*; \
+			source $(VENV_BASE)/py3_$*/bin/activate; \
 			umask 0022; \
 			pip install -r py3/$*/requirements.txt; \
 		else \
-			$(VENV_BASE)/$*/bin/pip install -U pip; \
-			$(VENV_BASE)/$*/bin/pip install -U -r py3/$*/requirements.txt; \
+			$(VENV_BASE)/py3_$*/bin/pip install -U pip; \
+			$(VENV_BASE)/py3_$*/bin/pip install -U -r py3/$*/requirements.txt; \
 		fi; \
 	fi
