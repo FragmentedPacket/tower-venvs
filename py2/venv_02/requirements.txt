@@ -1,2 +1,0 @@
-psutil
-ansible==2.8.1

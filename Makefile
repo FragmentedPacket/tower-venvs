@@ -23,7 +23,7 @@ create_venv_base_dir:
 	fi; \
 
 add_custom_venvs_to_tower:
-	curl -u $(USERNAME):$(PASSWORD) -X PATCH 'https://$(SERVER)/api/v2/settings/system/' \
+	@curl -u $(USERNAME):$(PASSWORD) -X PATCH 'https://$(SERVER)/api/v2/settings/system/' \
 	-d '{"CUSTOM_VENV_PATHS": ["$(VENV_BASE)"]}' \
 	-H 'Content-Type: application/json' \
 	-k \
@@ -35,6 +35,7 @@ install_py2_envs_%:
 			source $(VENV_BASE)/py2_$*/bin/activate; \
 			umask 0022; \
 			pip install -U pip; \
+			pip install psutil; \
 			pip install -r py2/$*/requirements.txt; \
 		else \
 			$(VENV_BASE)/py2_$*/bin/pip install -U pip; \
@@ -46,9 +47,10 @@ install_py3_envs_%:
 	yum install -y python36-devel python-devel gcc; \
 	if [ "$(VENV_BASE)" ]; then \
 		if [ ! -d "$(VENV_BASE)/$*" ]; then \
-			python3 -m venv --system-site-packages $(VENV_BASE)/py3_$*; \
+			python3 -m venv $(VENV_BASE)/py3_$*; \
 			source $(VENV_BASE)/py3_$*/bin/activate; \
 			umask 0022; \
+			pip install psutil; \
 			pip install -r py3/$*/requirements.txt; \
 		else \
 			$(VENV_BASE)/py3_$*/bin/pip install -U pip; \
