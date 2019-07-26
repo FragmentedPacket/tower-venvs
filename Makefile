@@ -50,6 +50,7 @@ install_py3_envs_%:
 			python3 -m venv $(VENV_BASE)/py3_$*; \
 			source $(VENV_BASE)/py3_$*/bin/activate; \
 			umask 0022; \
+			pip install -U pip; \
 			pip install psutil; \
 			pip install -r py3/$*/requirements.txt; \
 		else \
